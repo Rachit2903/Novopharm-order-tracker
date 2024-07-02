@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { MONGO_CONNECTION_URI } = require("./keys")
+
 const connectDb = async () => {
     try {
         const conn = await mongoose.connect(
