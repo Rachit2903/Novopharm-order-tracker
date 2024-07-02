@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novopharm - Dashboard</title>
+    <!-- Favicon -->
+    <link rel="icon" href="../cstm-assets/logo.svg" type="image/png" />
+    <!-- Font Awesome 5 -->
+    <link rel="stylesheet" href="../libs/@fortawesome/fontawesome-free/css/all.min.css" />
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Page CSS -->
+    <link type="text/css" href="../libs/@fancyapps/fancybox/dist/jquery.fancybox.min.css" rel="stylesheet" />
+    <!-- Purpose CSS -->
+    <link rel="stylesheet" href="../css/purpose.css" id="stylesheet" />
+    <!-- Custom CSS -->
+    <style>
+        .company-card {
+            border: 1px solid #e2e2e2;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .company-card:hover {
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .company-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            text-transform: capitalize;
+        }
+
+        .delete-button {
+            align-self: flex-end;
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <header class="header" id="header-main">
+        <!-- Main navbar -->
+        <%- include('partials/navbar'); %>
+    </header>
+    <main class="flex-grow-1">
+        <div class="container mt-4">
+            <div class="row">
+                <% for(let i=0; i < companies.length; i++) { %>
+                    <div class="col-md-4">
+                        <div class="card company-card"
+                            onclick="window.location.href='/company/view/<%= companies[i]._id %>'">
+                            <div class="card-body">
+                                <h5 class="card-title company-title">
+                                    <a href="/company/view/<%= companies[i]._id %>">
+                                        <%= companies[i].name %>
+                                    </a>
+                                </h5>
+                            </div>
+                            <div class="card-footer delete-button">
+                                <button class="btn btn-danger btn-sm"
+                                    onclick="deleteCompany('<%= companies[i]._id %>')">Delete Company</button>
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
+            </div>
+        </div>
+        <div class="container mt-4">
+            <div class="d-flex justify-content-between mb-2 pb-xs-10">
+                <a href="/company/create" class="btn btn-primary">Create Company</a>
+                <div class="btn-group">
+                    <a href="/order/access?status=Pending" class="btn btn-warning">Pending Orders</a>
+                    <a href="/order/access?status=Completed" class="btn btn-success">Completed Orders</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <%- include('partials/footer'); %>
+    </footer>
+
+    <!-- Bootstrap JS and other scripts -->
+    <!-- Core JS - includes jquery, bootstrap, popper, in-view and sticky-kit -->
+    <script src="../js/purpose.core.js"></script>
+    <!-- Page JS -->
+    <script src="../libs/@fancyapps/fancybox/dist/jquery.fancybox.min.js"></script>
+    <script src="../libs/autosize/dist/autosize.min.js"></script>
+    <!-- Purpose JS -->
+    <script src="../js/purpose.js"></script>
+    <!-- Demo JS - remove it when starting your project -->
+    <script src="../js/demo.js"></script>
+
+    <script>
+        // Check if companies array is empty and update DOM accordingly
+        const companies = "<%- JSON.stringify(companies) %>";
+        const companyDiv = document.getElementById("company-display-div");
+
+        if (!companies.length) {
+            companyDiv.innerHTML = "<h1>No Companies Found</h1>";
+        }
+    </script>
+    <script>
+        async function deleteCompany(companyId) {
+            if (confirm('Are you sure you want to delete this company?')) {
+                try {
+                    const response = await fetch(`/company/delete/${companyId}`, {
+                        method: 'DELETE'
+                    });
+                    const data = await response.json();
+                    if (data.deletedCount >= 1) {
+                        // alert('Company deleted successfully.');
+                        window.location.reload();
+                    } else {
+                        alert('Failed to delete the company.');
+                    }
+                } catch (error) {
+                    console.error('Error deleting company:', error);
+                    alert('An error occurred while trying to delete the company.');
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

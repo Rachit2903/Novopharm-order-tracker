@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description"
+        content="Purpose is a unique and beautiful collection of UI elements that are all flexible and modular. A complete and customizable solution to building the website of your dreams." />
+    <meta name="author" content="Webpixels" />
+    <title>Novopharm</title>
+    <!-- Favicon -->
+    <link rel="icon" href="/cstm-assets/logo.svg" type="image/png" />
+    <!-- Font Awesome 5 -->
+    <link rel="stylesheet" href="/libs/@fortawesome/fontawesome-free/css/all.min.css" />
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Purpose CSS -->
+    <link rel="stylesheet" href="/css/purpose.css" id="stylesheet" />
+    <link href="https://vjs.zencdn.net/8.0.4/video-js.css" rel="stylesheet" />
+
+    <style>
+        /* Custom CSS for this page */
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+        .card:hover {
+            box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <header class="header" id="header-main">
+        <!-- Main navbar -->
+        <%- include('partials/navbar'); %>
+    </header>
+    <main class="flex-grow-1">
+        <div class="container mt-4">
+            <div id="order-display-div">
+                <% if (orders.length===0) { %>
+                    <div class="text-center">
+                        <h1>No Orders Found</h1>
+                    </div>
+                    <% } else { %>
+                        <div class="row">
+                            <% for (let i=0; i < orders.length; i++) { %>
+                                <div class="col-md-6 mb-4">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Order Number: <%= orders[i].orderNumber %>
+                                            </h5>
+                                            <p class="card-text">Company Name: <%= orders[i].companyName %>
+                                            </p>
+                                            <p class="card-text">Item Name: <%= orders[i].itemName %>
+                                            </p>
+                                            <p class="card-text">Quantity: <%= orders[i].quantity %>
+                                            </p>
+                                            <p class="card-text">Unit Rate: <%= orders[i].unitRate %>
+                                            </p>
+                                            <p class="card-text">Amount: <%= orders[i].amount %>
+                                            </p>
+                                            <p class="card-text">Status: <%= orders[i].status %>
+                                            </p>
+                                            <p class="card-text">Date of Creation: <%= new
+                                                    Date(orders[i].orderDate).toLocaleString() %>
+                                            </p>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-info btn-sm dropdown-toggle"
+                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Update Status
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="#"
+                                                        onclick="updateOrderStatus('<%= orders[i]._id %>', 'Pending')">Pending</a>
+                                                    <a class="dropdown-item" href="#"
+                                                        onclick="updateOrderStatus('<%= orders[i]._id %>', 'Completed')">Completed</a>
+                                                </div>
+                                                <button class="btn btn-danger btn-sm ml-2"
+                                                    onclick="deleteOrder('<%= orders[i]._id %>')">Delete</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% } %>
+                        </div>
+                        <% } %>
+            </div>
+        </div>
+    </main>
+    <%- include('partials/footer'); %>
+
+        <!-- Core JS - includes jquery, bootstrap, popper, in-view and sticky-kit -->
+        <script src="/js/purpose.core.js"></script>
+        <!-- Page JS -->
+        <script src="/libs/autosize/dist/autosize.min.js"></script>
+        <script src="https://vjs.zencdn.net/8.0.4/video.min.js"></script>
+        <!-- Purpose JS -->
+        <script src="/js/purpose.js"></script>
+        <!-- Demo JS - remove it when starting your project -->
+        <script src="/js/demo.js"></script>
+
+        <script>
+            // Check if orders array is empty and update DOM accordingly
+            const orders = "<%= JSON.stringify(orders) %>";
+            const orderDiv = document.getElementById("order-display-div");
+
+            if (orders.length === 0) {
+                orderDiv.innerHTML = "<div class='text-center'><h1>No Orders Found</h1></div>";
+            }
+
+            // Function to handle delete order button click
+            async function deleteOrder(orderId) {
+                if (confirm("Are you sure you want to delete this order?")) {
+                    try {
+                        const response = await fetch(`/order/delete/${orderId}`, {
+                            method: "DELETE"
+                        });
+                        const data = await response.json();
+                        if (data.deletedCount >= 1) {
+                            window.location.reload();
+                        } else {
+                            console.log("Unable to delete order.");
+                        }
+                    } catch (error) {
+                        console.error("Error deleting order:", error);
+                    }
+                }
+            }
+
+            // Function to handle update status button click
+            async function updateOrderStatus(orderId, status) {
+                try {
+                    const response = await fetch(`/order/updateStatus/${orderId}`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ status })
+                    });
+                    const data = await response.json();
+                    if (data.id) {
+                        window.location.reload();
+                    }
+                    else {
+                        console.log(data.error);
+                    }
+                } catch (error) {
+                    console.error("Error updating status:", error);
+                }
+            }
+        </script>
+</body>
+
+</html>

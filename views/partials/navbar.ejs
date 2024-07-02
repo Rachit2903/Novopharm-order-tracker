@@ -1,0 +1,65 @@
+<nav class="navbar bg-black navbar-main navbar-expand-lg navbar-dark" id="navbar-main"
+    style="padding-top: 2rem; padding-bottom: 2rem">
+    <div class="container px-lg-0">
+        <!-- Logo -->
+        <!-- (Add your logo here if needed) -->
+
+        <!-- Navbar collapse trigger -->
+        <button class="navbar-toggler pr-0" type="button" data-toggle="collapse" data-target="#navbar-main-collapse"
+            aria-controls="navbar-main-collapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbar-main-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item d-lg-none d-xl-block">
+                    <a class="nav-link" href="/dashboard">Dashboard</a>
+                </li>
+            </ul>
+
+            <!-- Search bars -->
+            <form class="form-inline mx-auto w-100 w-sm-75 w-md-50 w-lg-60 d-flex">
+                <input required class="form-control mr-2 flex-grow-1" type="search"
+                    placeholder="Search Order by Item Name" aria-label="Search Item Name" name="itemName">
+                <input class="form-control mr-2 flex-grow-1" type="search" placeholder="Search Order by Company Name"
+                    aria-label="Search Company Name" name="companyName">
+                <button class="btn btn-link" type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item mr-2"> <!-- Adjusted margin right to create space -->
+                    <div class="btn-group">
+                        <button type="button" class="btn-sm btn-primary dropdown-toggle" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            <%= user.firstName + ' ' + user.lastName %>
+                        </button>
+                        <div class="dropdown-menu" style="width: 70%; min-width: 13rem">
+                            <a class="dropdown-item" href="/profile">
+                                <i class="fas fa-user"></i> Profile</a>
+                            <a class="dropdown-item" href="/auth/logout">
+                                <i class="fas fa-arrow-alt-circle-right"></i> Logout</a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<script>
+    const form = document.querySelector("form");
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const itemName = form.itemName.value;
+        const companyName = form.companyName.value;
+        const response = await fetch(`/search?itemName=${itemName}&companyName=${companyName}`);
+        if (response.status === 200) {
+            const data = await response.json();
+            window.location.replace(`/order/view?itemName=${itemName}&companyName=${companyName}`);
+        } else {
+            window.location.replace("/404-not-found");
+        }
+    });
+</script>

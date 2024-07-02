@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novopharm-login</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 5 -->
+    <link rel="stylesheet" href="/libs/@fortawesome/fontawesome-free/css/all.min.css">
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            max-width: 400px;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-container p {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .login-container a {
+            display: block;
+            text-align: center;
+            padding: 12px 20px;
+            margin-top: 20px;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: #ffffff;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .login-container a:hover {
+            background-color: #0056b3;
+        }
+
+        .google-icon {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <p>Novopharm Order Tracker</p>
+        <a href="/auth/google">
+            <i class="fab fa-google google-icon"></i> Sign in with Google
+        </a>
+    </div>
+
+    <!-- Font Awesome 5 Icons -->
+    <script src="/libs/@fortawesome/fontawesome-free/js/all.min.js"></script>
+</body>
+
+</html>

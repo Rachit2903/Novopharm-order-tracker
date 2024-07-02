@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novopharm-create-order</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="/cstm-assets/logo.svg" type="image/png" />
+    <!-- Font Awesome 5 -->
+    <link rel="stylesheet" href="/libs/@fortawesome/fontawesome-free/css/all.min.css" />
+    <!-- Page CSS -->
+    <link rel="stylesheet" href="/libs/flatpickr/dist/flatpickr.min.css" />
+    <link rel="stylesheet" href="/libs/select2/dist/css/select2.min.css" />
+    <!-- Purpose CSS -->
+    <link rel="stylesheet" href="/css/purpose.css" id="stylesheet" />
+
+    <link rel="stylesheet" href="/richtexteditor/richtexteditor/rte_theme_default.css" />
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap-theme.min.css">
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Popper -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <header class="header" id="header-main">
+        <!-- Main navbar -->
+        <%- include('partials/navbar'); %>
+    </header>
+    <main class="flex-grow-1">
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-md-6 offset-md-3">
+                    <form id="order-form">
+                        <div class="form-group">
+                            <label for="orderNumber">Order Number</label>
+                            <input type="text" class="form-control" name="orderNumber" id="orderNumber"
+                                placeholder="Enter Order no." required>
+                        </div>
+                        <div class="form-group">
+                            <label for="itemName">Item Name</label>
+                            <input type="text" class="form-control" name="itemName" id="itemName"
+                                placeholder="Enter Item Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="quantity">Quantity</label>
+                            <input type="number" class="form-control" name="quantity" id="quantity"
+                                placeholder="Enter Quantity" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="unitRate">Unit Rate</label>
+                            <input type="number" class="form-control" name="unitRate" id="unitRate"
+                                placeholder="Enter Unit Rate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="amount">Amount</label>
+                            <input type="number" class="form-control" name="amount" id="amount"
+                                placeholder="Enter Amount" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Modal -->
+        <div class="modal modal-danger" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModal"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title h6" id="modal_title_6">Something went wrong</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="py-3 text-center">
+                            <i class="fas fa-frown fa-4x"></i>
+                            <h5 class="heading h4 mt-4">We're Sorry</h5>
+                            <p>Something went wrong while trying to process your request. Kindly try again later.</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" onclick="window.location.reload(true)" class="btn btn-sm btn-white"
+                            data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Modal -->
+        <div class="modal" id="loadingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row justify-content-center">
+                            <div class="col-auto">
+                                <div class="spinner-grow text-primary" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                                <div class="spinner-grow text-primary" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                                <div class="spinner-grow text-primary" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="py-3 text-center">
+                            <p>Your Order is getting Saved.</p>
+                            <p class="font-weight-700">Don't reload or close this window, as it might take a few
+                                minutes.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Modal -->
+        <div class="modal modal-success" id="successModal" tabindex="-1" role="dialog" aria-labelledby="modal_success"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title h6" id="modal_title_6">Successful</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="py-3 text-center">
+                            <i class="fas fa-check-circle fa-4x"></i>
+                            <h5 class="heading h4 mt-4">Order Created Successfully</h5>
+                            <p>Your Order has been created successfully. You may close the window now.</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" onclick="window.location.reload(true)" class="btn btn-sm btn-white"
+                            data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <%- include('partials/footer'); %>
+        <!-- Scripts -->
+        <!-- Core JS - includes jquery, bootstrap, popper, in-view and sticky-kit -->
+        <script src="/js/purpose.core.js"></script>
+        <!-- Page JS -->
+        <script src="/libs/flatpickr/dist/flatpickr.min.js"></script>
+        <script src="/libs/select2/dist/js/select2.min.js"></script>
+        <script src="/libs/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+        <!-- Purpose JS -->
+        <script src="/js/purpose.js"></script>
+        <!-- Demo JS - remove it when starting your project -->
+        <script src="/js/demo.js"></script>
+        <script type="text/javascript" src="/richtexteditor/richtexteditor/rte.js"></script>
+        <script type="text/javascript" src="/richtexteditor/richtexteditor/plugins/all_plugins.js"></script>
+
+        <script>
+            const orderForm = document.getElementById("order-form");
+
+            orderForm.addEventListener("submit", async (event) => {
+                event.preventDefault();
+                $("#loadingModal").modal("show");
+                $("#successModal").modal("hide");
+                $("#errorModal").modal("hide");
+
+                try {
+                    const orderNumber = orderForm.orderNumber.value;
+                    const itemName = orderForm.itemName.value;
+                    const quantity = orderForm.quantity.value;
+                    const unitRate = orderForm.unitRate.value;
+                    const amount = orderForm.amount.value;
+                    const companyId = "<%=companyId %>";
+                    const companyName = "<%=companyName%>";
+                    const response = await fetch("/order/create", {
+                        method: "POST",
+                        headers: {
+                            "Content-type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            orderNumber,
+                            itemName,
+                            quantity,
+                            unitRate,
+                            amount,
+                            companyId,
+                            companyName,
+                        })
+                    });
+                    const data = await response.json();
+
+                    if (data.id) {
+                        $("#loadingModal").modal("hide");
+                        $("#successModal").modal("show");
+                    } else {
+                        $("#loadingModal").modal("hide");
+                        $("#errorModal").modal("show");
+                    }
+                } catch (error) {
+                    console.log(error);
+                    $("#loadingModal").modal("hide");
+                    $("#errorModal").modal("show");
+                }
+            });
+        </script>
+
+</body>
+
+</html>
