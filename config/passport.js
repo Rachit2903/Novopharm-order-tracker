@@ -1,6 +1,6 @@
 const passport = require("passport");
 const mongoose = require("mongoose");
-const { clientID, clientSecret } = require("./keys");
+const { clientID, clientSecret, googleRedirectURI } = require("./keys");
 const User = mongoose.model("users");
 
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
@@ -9,7 +9,7 @@ passport.use(
     new GoogleStrategy({
         clientID,
         clientSecret,
-        callbackURL: "/auth/google/callback",
+        callbackURL: googleRedirectURI,
     },
         async (accessToken, refreshToken, profile, done) => {
             const newUser = {
