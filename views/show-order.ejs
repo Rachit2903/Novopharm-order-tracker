@@ -38,12 +38,13 @@
         <%- include('partials/navbar'); %>
     </header>
     <div class="container mt-4">
-        <div class="mb-3 d-flex justify-content-between">
-            <div>
-                <a href="/order/access?status=Pending" class="btn btn-warning">Pending Orders</a>
-                <a href="/order/access?status=Completed" class="btn btn-success">Completed Orders</a>
+        <div class="mb-3 row">
+            <div class="col-6 col-md-auto mb-2 mb-md-0">
+                <a href="/order/access?status=Pending" class="btn btn-warning btn-block">Pending Orders</a>
             </div>
-
+            <div class="col-6 col-md-auto mb-2 mb-md-0">
+                <a href="/order/access?status=Completed" class="btn btn-success btn-block">Completed Orders</a>
+            </div>
         </div>
         <div id="order-display-div">
             <% if (orders.length===0) { %>
